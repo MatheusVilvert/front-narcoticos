@@ -1,0 +1,54 @@
+<div class="container" id="app">
+    <div class="row">
+        <div class="card-header col-sm-12">
+            <i class="fa fa-table"></i> Groups
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                    <tr>
+                        <th class="col-md-4">Name</th>
+                        <th class="col-md-4">Localization</th>
+                        <th class="col-md-4">Virtual</th>
+                        <th class="col-md-4">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody id="home_table_body">
+                    <tr v-for="(g,index) in groups">
+                        <td>{{g.name}}</td>
+                        <td>
+                            <button class="btn" v-on:click="loadMap(g.latitude+','+g.longitude)" data-toggle="modal" data-target=".bd-example-modal-lg">View on map</button>
+                            <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <div id="mostrarMapa">
+                                            <div class="mapa" style="height: 300px;" data-latlong="0,0"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>{{g.virtual}}</td>
+                        <td align="center">
+                            <i v-on:click="prepareUpdate(index)" class="fa fa-pencil" aria-hidden="true"
+                               title="Edit Group"></i>
+                            <i style="margin-left: 5%;" v-on:click="deleteGroup(g.remote_id)" class="fa fa-trash"
+                               aria-hidden="true" title="Remove Group"></i>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card-footer small text-muted col-sm-12">
+            <span><!--Narcoticos Anônimos--></span>
+            <div align="right">
+                <input type="button" class="btn btn-sm" style="background-color: #337ab7; color: white;"
+                       v-on:click="this.page_data_controller.open_sub_module('add')" value="New online meeting">
+            </div>
+        </div>
+    </div>
+</div><!-- end container -->
+<script src="http://maps.google.com/maps/api/js?sensor=false&key=AIzaSyAojgCpOzlh9KSQNcLl2gSw93g8m5ORzWA"></script>
+<script src="/js/group.js"></script>

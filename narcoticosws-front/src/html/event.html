@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt_BR" xmlns:v-bind="http://www.w3.org/1999/xhtml" xmlns:v-on="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Index</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,700" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"
+          integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+</head>
+<body>
+<!--<nav class="nav-bar">-->
+    <!--<a href="meeting.html">Meeting</a>-->
+    <!--<a href="group.html">Group</a>-->
+    <!--<a href="event.html">Event</a>-->
+<!--</nav>-->
+<!--<div class="background-logo"></div>-->
+
+<div id="app" class="container">
+    <div class="form-event box-input col-3 to-left">
+        <label for="name">Name:</label>
+        <input type="text" class="form-control breadcrumb-item" v-model="newEvent.name" id="name">
+    </div>
+
+    <div class="form-event box-input col-3 to-left">
+        <label for="registerDate">Event date:</label>
+        <input type="date" class="form-control" v-model="newEvent.registerDate" id="registerDate">
+    </div>
+
+    <!--<div class="form-event box-input col-3 to-left">-->
+        <!--<label for="latitude">Latitude:</label>-->
+        <!--<input type="text" class="form-control" v-model="newEvent.latitude" id="latitude">-->
+    <!--</div>-->
+
+    <!--<div class="form-event box-input col-3 to-left">-->
+        <!--<label for="longitude">Longitude:</label>-->
+        <!--<input type="text" class="form-control" v-model="newEvent.longitude" id="longitude">-->
+    <!--</div>-->
+
+    <div class="form-event box-input col-3 to-left">
+        <label for="description">Description:</label>
+        <input type="text" class="form-control" v-model="newEvent.description" id="description">
+    </div>
+
+    <div class="form-event box-input col-3 to-left">
+        <label for="note">Note:</label>
+        <input type="text" class="form-control" v-model="newEvent.note" id="note">
+    </div>
+
+    <div class="form-event box-input col-3 to-left">
+        <label for="startTime">Start time:</label>
+
+        <select v-model="newEvent.startTime" class="form-control" id="startTime">
+            <option value="0" selected>0</option>
+            <option v-for="h in 23" v-bind:value="h">
+                {{ h }}
+            </option>
+        </select>
+
+    </div>
+
+    <div class="form-event box-input col-3 to-left">
+        <label for="endTime">End time:</label>
+
+        <select v-model="newEvent.endTime" class="form-control" id="endTime">
+            <option value="0" selected>0</option>
+            <option v-for="h in 23" v-bind:value="h">
+                {{ h }}
+            </option>
+        </select>
+
+    </div>
+
+    <!--<div class="form-event box-input col-3 to-left">-->
+    <!--<label for="address">Address:</label>-->
+    <!--<input type="text" class="form-control" v-model="newEvent.address" id="address">-->
+    <!--</div>-->
+
+    <div class="form-event box-input col-3 to-left">
+        <label for="city">City:</label>
+        <input type="text" class="form-control" v-model="newEvent.city" id="city">
+    </div>
+
+    <div class="form-event box-input col-3 to-left">
+        <label for="state">State:</label>
+        <input type="text" class="form-control" v-model="newEvent.state" id="state">
+    </div>
+
+    <div class="form-event box-input col-3 to-left">
+        <label for="country">Country:</label>
+        <input type="text" class="form-control" v-model="newEvent.country" id="country">
+    </div>
+
+    <div class="form-event box-input col-3 to-left">
+        <label for="addressNumber">Address number:</label>
+        <input type="text" class="form-control" v-model="newEvent.addressNumber" id="addressNumber">
+    </div>
+
+    <div class="form-event box-input col-3 to-left">
+        <label for="street">Street:</label>
+        <input type="text" class="form-control" v-model="newEvent.street" id="street">
+    </div>
+
+
+    <div class="form-event box-input col-3 to-right box-btns">
+        <button type="reset" class="to-right btns btn-cancel" v-on:click="clear">Cancel</button>
+        <button type="button" class="to-right btns btn-save" v-on:click="save">Save</button>
+    </div>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <!--<th>Latitude/Longitude</th>-->
+            <th>Description</th>
+            <th>Start time</th>
+            <th>End time</th>
+            <th>City</th>
+            <th>Street</th>
+            <th>Address number</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="(e,index) in events">
+            <td>{{e.name}}</td>
+            <!--<td>{{e.latitude}}/{{e.longitude}}</td>-->
+            <td>{{e.description}}</td>
+            <td>{{e.startTime}}</td>
+            <td>{{e.endTime}}</td>
+            <td>{{e.city}}</td>
+            <td>{{e.street}}</td>
+            <td>{{e.addressNumber}}</td>
+            <td><a :href="'https://www.google.com.br/maps/search/'+e.latitude+','+e.longitude" target="_blank">Mapa</a></td>
+            <td><button type="button" v-on:click="deleteEvent(e.remote_id)">Delete</button></td>
+            <td><button type="button" v-on:click="preperUpdate(index)">Update</button></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!--<ul style="list-style-type: none">-->
+    <!--<li class="col-12 to-left" v-for="(e,index) in events">{{e.name}}, {{e.latitude}}, {{e.longitude}}, {{e.description}}-->
+    <!--<button type="button" v-on:click="deleteEvent(e.remote_id)">Delete</button>-->
+    <!--<button type="button" v-on:click="preperUpdate(index)">Update</button>-->
+    <!--</li>-->
+    <!--</ul>-->
+
+
+</div>
+<script src="../js/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue-resource@1.3.4"></script>
+<script src="http://maps.google.com/maps/api/js?sensor=false&key=AIzaSyAojgCpOzlh9KSQNcLl2gSw93g8m5ORzWA"></script>
+<link rel="stylesheet" type="text/css" href="../css/jquery-gmaps-latlon-picker.css"/>
+<script src="../js/jquery-gmaps-latlon-picker.js"></script>
+<script src="../js/event.js"></script>
+</body>
+</html>

@@ -1,0 +1,294 @@
+
+<!--suppress ALL, JSAnnotator -->
+
+<head>
+    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <link href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+    <link href="https://cdn.datatables.net/1.10.15/css/dataTables.bootstrap.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+
+    <script src="https://unpkg.com/vue"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.3.4"></script>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.js" integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.15/js/dataTables.bootstrap.min.js"></script>-->
+
+</head>
+<style>
+    .logo {
+        width: 50px;
+        float: left;
+        margin-right: 15px;
+    }
+
+    .form-group {
+        max-width: 500px;
+    }
+
+    .actions {
+        padding: 10px 0;
+    }
+
+    .glyphicon-euro {
+        font-size: 12px;
+    }
+
+    .page-header {
+        padding-bottom: 5px;
+        margin: -20px 0 0px;
+        border-bottom: 1px solid #eee;
+    }
+
+
+</style>
+<body>
+<div class="container">
+    <div class="row" id="app">
+        <div class="card-header col-sm-12">
+            <i class="fa fa-table"></i> Just For Today
+        </div>
+        <div class="modal fade" id="myModal2" >
+            <div class="modal-dialog" role="document">
+
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Adicionar Mensagem</h4>
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div>
+                            <div class="row">
+                                <div class="col-sm-12" >
+                                    <span class="label label-danger" v-if="seen">Preencha todos os campos antes de salvar!</span>
+                                </div>
+                            </div>
+                            <br/>
+                            <label>Data:</label>
+                            <input class="form-control" type="date" v-model="data" v-on:click="!seen">
+                            <label class="label-form">Mensagem:</label>
+                            <textarea class="form-control" rows="10" v-model="addMsg.message" v-on:click="!seen"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" v-on:click="adicionarMsg()" data-dismiss="modal">Salvar</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="modal fade" id="myModal">
+            <div class="modal-dialog" role="document">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Editar Mensagem</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-header">
+                        <label>Data: {{mess.day}}/{{mess.month}}</label>
+                    </div>
+                    <div class="modal-body">
+                        <input class="form-control" v-model="mess.remote_id" type="hidden"></input>
+                        <textarea class="form-control" rows="10" v-model="mess.message"></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" v-on:click="salvaMsg()" data-dismiss="modal">Salvar</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <div class="col-sm-12">
+                <div class="row">
+                    <div class="col-md-12">
+                        <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal2">Add <i class="fa fa-plus-circle" aria-hidden="true"></i></button>
+                    </div>
+                </div>
+                <br/>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <select class="form-control" v-model="language" v-on:change="buscaPorDia()">
+                            <option value="pt">Português</option>
+                            <option value="en">English</option>
+                            <option value="es">Español</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-4">
+                    </div>
+                    <div class="col-sm-4" align="right">
+                        <div class="input-group">
+                            <input class="form-control" type="date" v-model="diaM">
+                            <span class="input-group-addon">
+                                <div class="btn btn-default btn-sm" v-on:click="buscaPorDia()">
+                                    <i class="fa fa-search" aria-hidden="true"></i>
+                                </div>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <br/>
+                <div class="table-responsive">
+                    <table class="table table-bordered"  id="tabela" width="100%" style="padding:5px">
+                        <thead>
+                        <th style="text-align: center">Mensagem do dia</th>
+                        <th style="text-align: center">Opções</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr v-for="d in dados">
+                            <td>{{d.message}}</td>
+                            <td style="text-align: center">
+                                <button class="btn btn-warning btn-sm" v-on:click="editarMess(d.remote_id)" data-toggle="modal" data-target="#myModal">
+                                    Editar
+                                </button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <button class="btn btn-default btn-sm" v-on:click="diminuiData()"><i class="fa fa-angle-double-left" aria-hidden="true"></i> Previous</button><button class="btn btn-default btn-sm pull-right" v-on:click="aumentaData()">Next <i class="fa fa-angle-double-right" aria-hidden="true"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+
+    var vm = new Vue({
+        // Definimos el contexto de la App
+        el: '#app',
+        data: {
+            dados: [],
+            mess: "",
+            novaMsg: {id:"",message:""},
+            addMsg: {day:"",message:"",month:"",language:""},
+            data:"",
+            diaM: "",
+            language: "pt",
+            seen: false
+        },
+        beforeMount: function(){
+            var dataAtual = new Date();
+            this.diaM = dataAtual.toISOString().slice(0,10);
+            this.buscaPorDia();
+        },
+        methods:{
+
+            editarMess: function (id) {
+                this.$http.get("http://localhost:8081/justfortoday/private/find/"+id)
+                    .then(function(res){
+                        this.mess = res.body;
+                    }, function (res){
+                        console.log(res);
+                    });
+            },
+            salvaMsg: function () {
+                this.novaMsg.id = this.mess.remote_id;
+                this.novaMsg.message = this.mess.message;
+                this.$http.put("http://localhost:8081/justfortoday/private/edit",this.novaMsg).bind(this)
+                    .then(function(res){
+                        this.buscaPorDia();
+                    }, function (res){
+                        console.log(res);
+                    });
+            },
+            buscaPorDia: function () {
+                if(this.diaM != ""){
+
+                    var i = this.diaM.substr(5,10);
+                    var dia = i.substr(3, 5);
+                    var mes = i.substr(0, 2);
+                    this.$http.get("http://localhost:8081/justfortoday/private/"+dia+"/"+mes+"/"+this.language)
+                        .then(function(res){
+                            this.dados = res.body;
+                        }, function (res){
+                            console.log(res);
+                        });
+                }else {
+
+                    return false;
+
+                }
+
+            },
+            adicionarMsg: function () {
+
+                if(this.addMsg.message != "" && this.data != ""){
+                    var iN = this.data.substr(5, 10);
+                    var diaN = iN.substr(3, 5);
+                    var mesN = iN.substr(0, 2);
+                    this.addMsg.day = diaN;
+                    this.addMsg.month = mesN;
+                    this.addMsg.language = this.language;
+                    this.$http.post("http://localhost:8081/justfortoday/private/create",this.addMsg).bind(this)
+                        .then(function(res){
+                            this.buscaPorDia();
+                            this.addMsg.day = "";
+                            this.addMsg.month = "";
+                            this.addMsg.language = "";
+                            this.addMsg.message = "";
+                            this.data = "";
+                        }, function (res){
+                            console.log(res);
+                        });
+                }else{
+                    this.seen = true;
+                }
+
+            },
+
+            aumentaData: function () {
+                var d;
+
+                if(this.diaM == ""){
+                     d = new Date();
+                     this.diaM = d.toISOString().slice(0,10);
+                }else {
+                    d = new Date(this.diaM);
+                    d.setDate(d.getDate() + 1);
+                    this.diaM = d.toISOString().slice(0,10);
+                }
+
+                this.buscaPorDia();
+
+            },
+
+            diminuiData: function () {
+                var f;
+
+                if(this.diaM == ""){
+                    f = new Date();
+                    this.diaM = f.toISOString().slice(0,10);
+                }else {
+                    f = new Date(this.diaM);
+                    f.setDate(f.getDate() - 1);
+                    this.diaM = f.toISOString().slice(0,10);
+                }
+
+                this.buscaPorDia();
+
+            }
+
+        }
+
+    });
+
+
+</script>

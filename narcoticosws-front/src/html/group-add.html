@@ -1,0 +1,52 @@
+<div class="container" id="app">
+    <div class="row">
+        <div class="card-header col-sm-12">
+            <i class="fa fa-plus" aria-hidden="true"></i> New Group
+        </div>
+        <div class="card-body">
+            <form ><!-- @submit.prevent="form_group.valid_fields_filled()" -->
+                <div class="row">
+                    <div class="col-md-12">
+
+                        <div class="form-group" style="width: 20%; float: left;">
+                            <input type="text" class="form-control" v-model="newGroup.name" placeholder="Name">
+                        </div>
+
+                        <div class="form-group" style="width: 20%; float: left; margin-left: 2%;">
+                            <input type="text" class="form-control" v-model="newGroup.phone" placeholder="Phone">
+                        </div>
+
+                        <div class="form-group" style="width: 20%; float: left; margin-left: 2%;">
+                            <select type="text" class="form-control" v-model="newGroup.virtual" placeholder="Virtual">
+                                <option value="" disabled selected>Virtual</option>
+                                <option value="true">Yes</option>
+                                <option value="false">No</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group" style="width: 32%; float: left; margin-left: 2%;">
+                            <input type="text" class="form-control float-left" style="width: 62.275449%; float: left; border-bottom-right-radius: 0%; border-top-right-radius: 0%;" v-model="newGroup.address" id="address" placeholder="Address">
+                            <input type="button" class="float-left btn" style="border-bottom-left-radius: 0%; border-top-left-radius: 0%; width: 37.53%" v-on:click="buscar" id="btn" value="Get Address"/>
+                            <div>
+                                <input type="hidden" v-model="newGroup.latitude" id="latitude"/>
+                                <input type="hidden" v-model="newGroup.longitude" id="longitude"/>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div id="mostrarMapa" class="col-md-12">
+                        <div class="mapa" style="height: 211px; width: 100%" data-latlong="0,0"></div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="card-footer small text-muted col-sm-12">
+            <span><!--Narcoticos Anônimos--></span>
+            <div align="right">
+                <input type="button" class="btn" style="background-color: green; color: white;" v-on:click="validate" value="Save">
+            </div>
+        </div>
+    </div>
+</div><!-- end container -->
+<script src="http://maps.google.com/maps/api/js?sensor=false&key=AIzaSyAojgCpOzlh9KSQNcLl2gSw93g8m5ORzWA"></script>
+<script src="/js/group.js"></script>
